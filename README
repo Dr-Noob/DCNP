@@ -1,1 +1,22 @@
-Distributed Computing Network Protocol
+El protocolo DCNP permite distribuir el trabajo necesario para llevar a cabo una tarea entre tantos ordenadores como se desee.
+
+En este repositorio se incluye:
+-El documento .pdf de la especificación del protoclo
+-Código de la implementación en java(cliente y servidor)
+-Código de distintos módulos, que pueden usarse para probar el funcionamiento del protocolo.
+-La librería en java para el protocolo, que puede ser usada para programar módulos para DCNP
+-El documento pdf explicativo de programación en java de módulos para el protcolo, haciendo uso de la libería que se menciona en el apartado anterior.
+
+Para probar de forma rápida el funcionamiento del protocolo:
+1-Descarga el JAR cliente(Node.jar) y el del servidor(Conductor.jar).
+2-Descarga los JAR del módulo que prefieras(por ejemplo, el de las N-Reinas); descarga tanto el solver como el problem.
+3-Copia ambos módulos a un directorio donde se vaya a ejecutar el Servidor y crea el archivo 'dcnp.txt' (tal y como se describe en el documento de programación de módulos para DCNP); Por ejemplo:
+"name = N-Reinas
+problem = problem.jar
+solver = solver.jar
+problem_args = 16
+problem_args = 16"
+Ambos JAR deben estar en la misma carpeta. Los argumentos especifican, en este caso, que N=16 para el problema de las N-Reinas
+4-Ejecuta el Servidor(Conductor.jar) pasándole como argumento el directorio donde estén los módulos y el archivo 'dcnp.txt'
+5-Ejecuta el Cliente(Node.jar) en tantos ordenadores como quieras(al menos uno) y especifica la IP del Servidor(-ip ip_servidor) y el directorio donde se guardará el módulo solver(no importa cual sea)(-folder tmp)
+6-En el servidor, ejecuta la orden 'start'
