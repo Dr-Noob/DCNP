@@ -4,87 +4,87 @@ El protocolo DCNP permite distribuir el trabajo necesario para llevar a cabo una
 
 ### Estructura del proyecto
 
-├── documentacion
-│   ├── dcnp.pdf
-│   └── programacion_dcnp.pdf
-├── jar
-│   ├── Conductor.jar
-│   ├── modulos
-│   │   ├── hash
-│   │   │   ├── hash_problem.jar
-│   │   │   └── hash_solver.jar
-│   │   └── nreinas
-│   │       ├── nreinas_problem.jar
-│   │       └── nreinas_solver.jar
-│   └── Node.jar
-├── lib
-│   └── libDcnp.jar
-├── README
-└── src
-    ├── app
-    │   ├── Conductor.java
-    │   └── Node.java
-    ├── conductor
-    │   ├── ConductorProblem.java
-    │   ├── ConductorServer.java
-    │   ├── ConductorShell.java
-    │   ├── ConductorThread.java
-    │   ├── Folder.java
-    │   ├── NodeInfo.java
-    │   └── NodesDatabase.java
-    ├── dcnp
-    │   ├── Problem.java
-    │   └── Solver.java
-    ├── message
-    │   ├── ConductorProblem
-    │   │   ├── Message.java
-    │   │   ├── MessageNewOut.java
-    │   │   ├── MessageNextIn.java
-    │   │   ├── MessageNextInReq.java
-    │   │   └── MessageSolution.java
-    │   ├── NodeConductor
-    │   │   ├── MessageAddNode.java
-    │   │   ├── MessageBye.java
-    │   │   ├── MessageHasStarted.java
-    │   │   ├── Message.java
-    │   │   ├── MessageNewIn.java
-    │   │   ├── MessageNewOutBye.java
-    │   │   ├── MessageNewOut.java
-    │   │   ├── MessageProblemModule.java
-    │   │   └── MessageStart.java
-    │   └── NodeSolver
-    │       ├── MessageBye.java
-    │       ├── Message.java
-    │       ├── MessageNewIn.java
-    │       └── MessageNextOut.java
-    ├── modulos
-    │   ├── Modulo_Buscar_Hash
-    │   │   ├── app
-    │   │   │   ├── Problem.java
-    │   │   │   └── Solver.java
-    │   │   ├── problem
-    │   │   │   └── MD5.java
-    │   │   └── solver
-    │   │       ├── HThread.java
-    │   │       └── MD5.java
-    │   └── Modulo_N-Reinas
-    │       ├── app
-    │       │   ├── Problem.java
-    │       │   └── Solver.java
-    │       ├── problem
-    │       │   └── Queens.java
-    │       └── solver
-    │           ├── QThread.java
-    │           └── Queens.java
-    ├── node
-    │   ├── NodeArgumentsParser.java
-    │   ├── NodeClient.java
-    │   ├── NodeCompute.java
-    │   └── NodeShell.java
-    └── utils
-        ├── Shell.java
-        ├── Statistics.java
-        └── Utils.java
+    ├── documentacion
+    │   ├── dcnp.pdf
+    │   └── programacion_dcnp.pdf
+    ├── jar
+    │   ├── Conductor.jar
+    │   ├── modulos
+    │   │   ├── hash
+    │   │   │   ├── hash_problem.jar
+    │   │   │   └── hash_solver.jar
+    │   │   └── nreinas
+    │   │       ├── nreinas_problem.jar
+    │   │       └── nreinas_solver.jar
+    │   └── Node.jar
+    ├── lib
+    │   └── libDcnp.jar
+    ├── README
+    └── src
+        ├── app
+        │   ├── Conductor.java
+        │   └── Node.java
+        ├── conductor
+        │   ├── ConductorProblem.java
+        │   ├── ConductorServer.java
+        │   ├── ConductorShell.java
+        │   ├── ConductorThread.java
+        │   ├── Folder.java
+        │   ├── NodeInfo.java
+        │   └── NodesDatabase.java
+        ├── dcnp
+        │   ├── Problem.java
+        │   └── Solver.java
+        ├── message
+        │   ├── ConductorProblem
+        │   │   ├── Message.java
+        │   │   ├── MessageNewOut.java
+        │   │   ├── MessageNextIn.java
+        │   │   ├── MessageNextInReq.java
+        │   │   └── MessageSolution.java
+        │   ├── NodeConductor
+        │   │   ├── MessageAddNode.java
+        │   │   ├── MessageBye.java
+        │   │   ├── MessageHasStarted.java
+        │   │   ├── Message.java
+        │   │   ├── MessageNewIn.java
+        │   │   ├── MessageNewOutBye.java
+        │   │   ├── MessageNewOut.java
+        │   │   ├── MessageProblemModule.java
+        │   │   └── MessageStart.java
+        │   └── NodeSolver
+        │       ├── MessageBye.java
+        │       ├── Message.java
+        │       ├── MessageNewIn.java
+        │       └── MessageNextOut.java
+        ├── modulos
+        │   ├── Modulo_Buscar_Hash
+        │   │   ├── app
+        │   │   │   ├── Problem.java
+        │   │   │   └── Solver.java
+        │   │   ├── problem
+        │   │   │   └── MD5.java
+        │   │   └── solver
+        │   │       ├── HThread.java
+        │   │       └── MD5.java
+        │   └── Modulo_N-Reinas
+        │       ├── app
+        │       │   ├── Problem.java
+        │       │   └── Solver.java
+        │       ├── problem
+        │       │   └── Queens.java
+        │       └── solver
+        │           ├── QThread.java
+        │           └── Queens.java
+        ├── node
+        │   ├── NodeArgumentsParser.java
+        │   ├── NodeClient.java
+        │   ├── NodeCompute.java
+        │   └── NodeShell.java
+        └── utils
+            ├── Shell.java
+            ├── Statistics.java
+            └── Utils.java
    
 ### Para empezar
 
