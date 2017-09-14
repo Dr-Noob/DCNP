@@ -120,6 +120,9 @@ public class NodeArgumentsParser {
 		System.out.println("\t REQUIERED. Specify the IP where node will connect to(Conductor IP)");
 		System.out.println("-folder X");
 		System.out.println("\t REQUIRED. Specify the folder where jar file needed to solve the problem will be saved");
+		System.out.println("-debug X");
+		System.out.println("\t OPTIONAL. Change debug mode(messages that notifies outputs to be computed)"); 
+		System.out.println("Default is 'quiet', which will not display debug messages at all. 'verbose' mode will display every debug message");
 		System.out.println("-help");
 		System.out.println("\t Shows this help");
 	}
