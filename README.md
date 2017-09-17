@@ -50,14 +50,18 @@ Estás de suerte. He hecho un pdf para gente como tú(/documentacion/programaci�
 ### Lista de comandos y argumentos
 
 * Conductor.jar
+
 Argumentos:
+
 | Argumento               | Explicación               |
 |:-----------------------:|:-------------------------:|
 | -folder X               | OBLIGATORIO: Especifica el directorio donde está el archivo de configuración 'dcnp.txt'        |
 | -debug (quiet|verbose)  | OPCIONAL: Cambia el modo debug. Por defecto, está activado el modo 'quiet' que no mostrará mensajes de debug, mientras que el modo 'verbose' sí lo hará |
 | -names required         | OPCIONAL: Especifica si los nodos deben identificarse cuando se conecten al servidor. Esto hará que el servidor muestre los nombres de cada nodo |
 | -help                   | Muestra la ayuda |
+
 Comandos:
+
 | Comando        | Explicación          |
 |:--------------:|:--------------------:|
 | -help          | Muestra la ayuda |
@@ -66,7 +70,9 @@ Comandos:
 | -exit          | Termina el servidor y le pide a los nodos que hagan lo mismo |
 
 * Node.jar
+
 Argumentos:
+
 | Argumento               | Explicación                |
 |:-----------------------:|:--------------------------:|
 | -debug (quiet|verbose)  | OBLIGATORIO: Especifica la ip del servidor
@@ -74,7 +80,9 @@ Argumentos:
 | -port X                 | OPCIONAL: Especifica el puerto del servidor al que el se conectará el nodo. Por defecto es el 4450 |
 | -name X                 | OBLIGATORIO/OPCIONAL: Dependiendo de cómo este configurado el servidor, puede ser o no obligatorio. Especifica el nombre con el que se identificará este nodo |
 | -help                   | Muestra la ayuda |
+
 Comandos:
+
 | Comando        | Explicación          |
 |:--------------:|:--------------------:|
 | -help          | Muestra la ayuda |
