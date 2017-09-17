@@ -15,16 +15,20 @@ public class ConductorThread extends Thread {
     private NodesDatabase nodesDatabase;
     private MessageProblemModule problem;
     private MessageAddNode addNode;
+    private boolean isDebugModeActivated;
     private ConductorServer server;
     private boolean end;
+    private boolean requireNames;
     private int threadId;
     private Semaphore start;
 	
-	public ConductorThread(Socket socket, NodesDatabase nodesDatabase, ConductorServer server, MessageProblemModule problem, Semaphore start, int threadId){
+	public ConductorThread(Socket socket, NodesDatabase nodesDatabase, ConductorServer server, MessageProblemModule problem, boolean requireNames, boolean isDebugModeActivated, Semaphore start, int threadId){
 		this.problem = problem;
 		this.socket = socket;
 		this.server = server;
 		this.threadId =  threadId;
+		this.isDebugModeActivated = isDebugModeActivated;
+		this.requireNames = requireNames;
 		this.end = false;
 		this.nodesDatabase = nodesDatabase;
 		this.start = start;
@@ -65,8 +69,28 @@ public class ConductorThread extends Thread {
 			return;
 		}
 		
+		//Check that node sent a valid name if name is required
+		if(this.requireNames) {
+			if(addNode.getName() == null) {
+				//Send NAME_ERROR with code 0
+				System.out.println("ERROR: Node with ip '" + socket.getInetAddress().getHostAddress() + "' did not sent a name");
+				Message nameError = new MessageNameError(MessageNameError.CODE_REQUIRED_NAME);
+				message.NodeConductor.Message.sendMessage(nameError, dos);
+				closeSocket();
+				return;
+			}
+			if(!nodesDatabase.addName(addNode.getName())) {
+				//Send NAME_ERROR with code 1
+				System.out.println("ERROR: Node with ip '" + socket.getInetAddress().getHostAddress() + "' sent a name that is already taken (" + addNode.getName() + ")");
+				Message nameError = new MessageNameError(MessageNameError.CODE_ALREADY_TAKEN_NAME);
+				message.NodeConductor.Message.sendMessage(nameError, dos);
+				closeSocket();
+				return;
+			}
+		}
+		
 		//Add this node to the database
-		if(!nodesDatabase.addNode(addNode.getnThreads(),addNode.getOs(),addNode.getCpuArch(),socket.getInetAddress().getHostAddress())){
+		if(!nodesDatabase.addNode(addNode.getnThreads(),addNode.getOs(),addNode.getCpuArch(),socket.getInetAddress().getHostAddress(),addNode.getName())){
 			System.out.println("ERROR: Node with ip " + socket.getInetAddress().getHostAddress() + " is already active in the server, and tried to establish a connection again");
 			System.out.println("It'll be ignored");
 			closeSocket();
@@ -109,7 +133,7 @@ public class ConductorThread extends Thread {
 		Message resp = null;
 		while(!this.end) {
 			String newIn = this.server.nextIn();
-			System.out.println("New input [" + newIn + "]");
+			if(this.isDebugModeActivated)System.out.println("New input [" + newIn + "]");
 			if(newIn == null) {
 				this.end();
 				return;
@@ -137,12 +161,12 @@ public class ConductorThread extends Thread {
 			case message.NodeConductor.Message.OP_NEW_OUT:
 				//Give to the server the new out given by the node just if solution was not found
 				if(!this.server.solutionFound())this.server.newOut(((MessageNewOut) resp).getOut(), newIn, this.socket.getInetAddress().getHostAddress());
-				System.out.println("New Output [" + ((MessageNewOut) resp).getOut() + "]");
+				if(this.isDebugModeActivated)System.out.println("New Output [" + ((MessageNewOut) resp).getOut() + "]");
 				break;
 			case message.NodeConductor.Message.OP_NEW_OUT_BYE:
 				this.end = true;
 				if(!this.server.solutionFound())this.server.newOut(((MessageNewOutBye) resp).getOut(), newIn, this.socket.getInetAddress().getHostAddress());
-				System.out.println("New Output [" + ((MessageNewOutBye) resp).getOut() + "]");
+				if(this.isDebugModeActivated)System.out.println("New Output [" + ((MessageNewOutBye) resp).getOut() + "]");
 				this.server.nodesDatabase.nodeDesconected(this.socket.getInetAddress().getHostAddress());
 				System.out.println("Node asks to finish the conection");
 				break;

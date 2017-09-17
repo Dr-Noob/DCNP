@@ -72,7 +72,6 @@ public class NodeCompute extends Thread {
 			} catch (IOException e) {
 				return;
 			}
-			//this.shell.print("NODE SAYS: " + new String(b));
 			this.shell.print("NODE SAYS: " + new String(b));
 		}
 	}

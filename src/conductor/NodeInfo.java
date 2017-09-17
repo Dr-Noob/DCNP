@@ -10,12 +10,14 @@ public class NodeInfo {
 	private String operatingSystem;
 	private String arch;
 	private String ip;
+	private String name;
 	
-	public NodeInfo(int nCores, String operatingSystem, String arch, String ip) {
+	public NodeInfo(int nCores, String operatingSystem, String arch, String ip, String name) {
 		this.nCores = nCores;
 		this.operatingSystem = operatingSystem;
 		this.arch = arch;
 		this.ip = ip;
+		this.name = name;
 		this.nInsComputed = 0;
 		this.startComputing = 0;
 		this.endComputing = 0;
@@ -46,6 +48,10 @@ public class NodeInfo {
 
 	public String getArch() {
 		return this.arch;
+	}
+	
+	public String getName() {
+		return this.name;
 	}
 
 	public String getIp() {

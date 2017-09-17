@@ -137,6 +137,81 @@ public class MessageProblemModule extends Message {
 	}
 	
 	/**
+	 * Done specifically to be called from parseMessage
+	 * @param opCode
+	 * @param dis
+	 */
+	MessageProblemModule(byte opCode, DataInputStream dis) {
+		super();
+		this.opCode = OP_PROBLEM_MODULE;
+		
+		this.bytesOfFieldExecutable = 0;
+		this.bytesOfFieldName = 0;
+		this.bytesOfFieldSolverArgs = 0;
+		
+		//Read NAME
+		try {
+			this.bytesOfFieldName = dis.readInt();
+		} catch (IOException e) {
+			System.out.println("FATAL ERROR: Failed to read field " + "BytesOfFieldName in Message 'ProblemModule'");
+			this.valid = false;
+			return;
+		}
+		
+		this.nameByteBuffer = new byte[this.bytesOfFieldName];
+		
+		try {
+			dis.readFully(nameByteBuffer);
+		} catch (IOException e) {
+			System.out.println("FATAL ERROR: Failed to read field " + "Name");
+			this.valid = false;
+			return;
+		}
+		
+		this.name = new String(nameByteBuffer);
+		
+		//Read EXECUTABLE
+		try {
+			this.bytesOfFieldExecutable = dis.readInt();
+		} catch (IOException e) {
+			System.out.println("FATAL ERROR: Failed to read field " + "BytesOfFieldExecutable in Message 'ProblemModule'");
+			this.valid = false;
+			return;
+		}
+		
+		this.executable = new byte[this.bytesOfFieldExecutable];
+		
+		try {
+			dis.readFully(this.executable);
+		} catch (IOException e) {
+			System.out.println("FATAL ERROR: Failed to read field " + "Executable");
+			this.valid = false;
+			return;
+		}	
+		
+		//Read SOLVER_ARGS
+		try {
+			this.bytesOfFieldSolverArgs = dis.readInt();
+		} catch (IOException e) {
+			System.out.println("FATAL ERROR: Failed to read field " + "BytesOfFieldSolverArgs in Message 'ProblemModule'");
+			this.valid = false;
+			return;
+		}
+		
+		this.solverArgsByteBuffer = new byte[this.bytesOfFieldSolverArgs];
+		
+		try {
+			dis.readFully(this.solverArgsByteBuffer);
+		} catch (IOException e) {
+			System.out.println("FATAL ERROR: Failed to read field " + "Executable");
+			this.valid = false;
+			return;
+		}
+		
+		this.solverArgs = new String(this.solverArgsByteBuffer);
+	}
+	
+	/**
 	 * Writes the executable(message already created) to the folder specified
 	 * @param folder Folder to write the file 
 	 * @param shell The shell where messages will be printed in

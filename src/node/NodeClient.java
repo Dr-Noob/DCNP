@@ -22,7 +22,9 @@ public class NodeClient extends Thread {
 	private boolean conectionIsHealthy;
 	private boolean end;
 	private boolean computeStarted;
+	private boolean debugModeActivated;
 	private State currentState;
+	private String name;
 	private final int CONNECTION_TIMEOUT = 2000;
 	
 	private enum State {
@@ -34,6 +36,8 @@ public class NodeClient extends Thread {
 		this.shell = shell;
 		this.shell.setClient(this);
 		this.compute = compute;
+		this.name = parser.getName();
+		this.debugModeActivated = parser.isDebugModeActivated();
 		this.conductorAdress = new InetSocketAddress(parser.getIp(), parser.getPort());
 		this.conectionIsHealthy = false;
 		this.end = false;
@@ -106,26 +110,57 @@ public class NodeClient extends Thread {
 	public void run () {
 		Message resp = null;
 		//Send ADD_NODE
-		MessageAddNode addNode = new MessageAddNode(stats.getCores(),stats.getArch(),stats.getOs());
+		MessageAddNode addNode = new MessageAddNode(stats.getCores(),stats.getArch(),stats.getOs(),this.name);
 		if(!message.NodeConductor.Message.sendMessage(addNode, dos)) {
 			this.end();
 			return;
 		}
 		
-		//Receive PROBLEM_MODULE
-		MessageProblemModule problemModule = new MessageProblemModule(dis);
-		if(!message.NodeConductor.Message.printErrorIfNotValid(problemModule)) {
+		resp = Message.parseMessage(dis);
+		if(resp == null) {
+			shell.printError("Disconnecting...");
 			this.end();
 			return;
 		}
 		
-		if(!problemModule.writeExecutable(compute.getFolder(),this.shell)) {
-			shell.printError("ERROR: Failed to write executable module, exiting");
-			this.end();
-			return;
+		switch (resp.getOpCode()) {
+			case message.NodeConductor.Message.OP_PROBLEM_MODULE:
+				//Receive PROBLEM_MODULE
+				MessageProblemModule problemModule = ((MessageProblemModule) resp);
+				if(!message.NodeConductor.Message.printErrorIfNotValid(problemModule)) {
+					this.end();
+					return;
+				}
+				
+				if(!problemModule.writeExecutable(compute.getFolder(),this.shell)) {
+					shell.printError("ERROR: Failed to write executable module, exiting");
+					this.end();
+					return;
+				}
+				this.compute.setFileName(problemModule.getModuleName());
+				this.compute.setArgs(problemModule.getModuleArgs());
+				break;
+			case message.NodeConductor.Message.OP_NAME_ERROR:
+				MessageNameError nameError =  ((MessageNameError) resp);
+				switch (nameError.getErrorCode()) {
+					case MessageNameError.CODE_REQUIRED_NAME:
+						System.out.println("ERROR: Conductor says that name is required to establish a connection");
+						this.end();
+						break;
+						
+					case MessageNameError.CODE_ALREADY_TAKEN_NAME:
+						System.out.println("ERROR: Conductor says that name '" + this.name + "' is already taken");
+						this.end();
+						break;
+
+					default:
+						System.out.println("ERROR: ErrorCode from name error message not recognised");
+						break;
+				}
+				return;
+				
 		}
-		this.compute.setFileName(problemModule.getModuleName());
-		this.compute.setArgs(problemModule.getModuleArgs());
+
 		this.compute.start();
 		this.computeStarted = true;
 		//Check compute is ok to start computing
@@ -190,7 +225,7 @@ public class NodeClient extends Thread {
 				return;
 				
 			case message.NodeConductor.Message.OP_NEW_IN:
-				this.shell.print("Computing input [" + ((MessageNewIn) resp).getIn() + "]");
+				if(this.debugModeActivated)this.shell.print("Computing input [" + ((MessageNewIn) resp).getIn() + "]");
 				this.compute.setNextIn(((MessageNewIn) resp).getIn());
 				break;	
 				

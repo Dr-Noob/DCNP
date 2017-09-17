@@ -17,7 +17,7 @@ public class Folder {
 	private String name;
 	private String solverArgs;
 	private String problemArgs;
-	private String folderName;
+	private String folderPath;
 	
 	Pattern problemPattern = Pattern.compile("problem\\s*=\\s*([^\\n\\t\\r|]*)\\s*");
 	Pattern solverPattern = Pattern.compile("solver\\s*=\\s*([^\\n\\t\\r|]*)\\s*");
@@ -29,9 +29,9 @@ public class Folder {
 	private final String TEXT_FILE = "dcnp.txt";
 	private boolean folderIsCorrect;
 	
-	public Folder(String folderName) {
+	public Folder(String folderPath) {
 		this.folderIsCorrect = false;
-		this.folderName = folderName;
+		this.folderPath = folderPath;
 		this.problem = null;
 		this.solver = null;
 		this.name = null;
@@ -42,18 +42,18 @@ public class Folder {
 		int nLine = 0;
 		boolean matches = true;
 		
-		if(this.folderName == null) {
+		if(this.folderPath == null) {
 			System.out.println("ERROR: Folder argument is empty");
 			return;
 		}
-		if(this.folderName.charAt(this.folderName.length()-1) == '/')this.folderName =this. folderName.substring(0, this.folderName.length()-1);
+		if(this.folderPath.charAt(this.folderPath.length()-1) == '/')this.folderPath =this. folderPath.substring(0, this.folderPath.length()-1);
 		try {
-			f = new Scanner(new File(this.folderName + "/" + TEXT_FILE));
+			f = new Scanner(new File(this.folderPath + "/" + TEXT_FILE));
 			if(!f.hasNextLine()){
-				System.out.println("ERROR: File " + this.folderName + "/" + TEXT_FILE + " is empty");
+				System.out.println("ERROR: File " + this.folderPath + "/" + TEXT_FILE + " is empty");
 				return;
 			}
-			System.out.println("Reading file '" + this.folderName + "/" + TEXT_FILE + "'");
+			System.out.println("Reading file '" + this.folderPath + "/" + TEXT_FILE + "'");
 			while(f.hasNextLine() && matches){ //Read line by line
 				nLine++;
 				line = f.nextLine();
@@ -117,7 +117,7 @@ public class Folder {
 			}
 			
 		} catch (FileNotFoundException e) {
-			System.out.println("ERROR: Either file '" + this.folderName + "/" + TEXT_FILE + "' was not found or it can not be acessible(permission denied)");
+			System.out.println("ERROR: Either file '" + this.folderPath + "/" + TEXT_FILE + "' was not found or it can not be acessible(permission denied)");
 			return;
 		}
 		//It's not necessary to check the problem file size, because MessageProblemModule can transport variable size files
@@ -144,11 +144,11 @@ public class Folder {
 	}
 	
 	public String getProblemPath() {
-		return (this.folderName + "/" + this.problem);
+		return (this.folderPath + "/" + this.problem);
 	}
 	
 	public String getSolverPath() {
-		return (this.folderName + "/" + this.solver);
+		return (this.folderPath + "/" + this.solver);
 	}
 	
 	public String getName() {

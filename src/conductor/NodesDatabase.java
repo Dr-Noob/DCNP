@@ -4,15 +4,26 @@ import java.util.HashSet;
 
 public class NodesDatabase {
 	private HashSet<NodeInfo> nodes;
+	private HashSet<String> names;
 	private long startComputing;
 	private long endComputing;
 	private int insComputed;
 	
 	public NodesDatabase() {
 		this.nodes = new HashSet<>();
+		this.names = new HashSet<>();
 		this.insComputed = 0;
 		this.startComputing = 0;
 		this.endComputing = 0;
+	}
+	
+	/**
+	 * Add a name to the database
+	 * @param name
+	 * @return false if this name was already taken
+	 */
+	public boolean addName(String name) {
+		return this.names.add(name);
 	}
 	
 	/**
@@ -21,17 +32,15 @@ public class NodesDatabase {
 	 * @param os Operating system of the node
 	 * @param cpuArch CPU Architecture of the node
 	 * @param ip IP of the node
+	 * @param name Name of the node(optional)
 	 * @return true if the node is not connected at the moment, false if it is connected
 	 */
-	public boolean addNode(int nThreads, String os, String cpuArch, String ip) {
-		NodeInfo newNode = new NodeInfo(nThreads,os,cpuArch,ip);
-		if(!this.nodes.add(newNode)) {
-			for(NodeInfo n : this.nodes) {
-				if(n.getIp().equals(ip)) {
-					return !n.isComputing();
-				}
-			}
+	public boolean addNode(int nThreads, String os, String cpuArch, String ip, String name) {
+		NodeInfo newNode = new NodeInfo(nThreads,os,cpuArch,ip,name);
+		for(NodeInfo n : this.nodes) {
+			if(n.getIp().equals(ip)) return false;
 		}
+		this.nodes.add(newNode);
 		return true;
 	}
 	
@@ -42,8 +51,8 @@ public class NodesDatabase {
 	 * @param cpuArch CPU Architecture of the node
 	 * @param ip IP of the node
 	 */
-	public void removeNode(int nThreads, String os, String cpuArch, String ip) {
-		NodeInfo deleteNode = new NodeInfo(nThreads,os,cpuArch,ip);
+	public void removeNode(int nThreads, String os, String cpuArch, String ip, String name) {
+		NodeInfo deleteNode = new NodeInfo(nThreads,os,cpuArch,ip,name);
 		this.nodes.remove(deleteNode);
 	}
 	
@@ -131,14 +140,28 @@ public class NodesDatabase {
 	 */
 	public void showStatistics() {
 		int i = 0;
-		for(NodeInfo n : this.nodes) {
-			i++;
-			System.out.println("Node Nº" + i + ":");
-			System.out.println("\t[" + n.getOperatingSystem() + "][" + n.getArch() + "][" + n.getnCores() + " cores][" + n.getIp() + "]");
-			System.out.println("\t" + n.getInsComputed() + " in/s computed");
-			System.out.println("\t" + n.getTimeComputing() + " seconds spent computing");
-			if(n.isComputing())System.out.println("\tIs computing");
-			else System.out.println("\tIs not computing");
+		
+		if(this.names.isEmpty()) {
+			for(NodeInfo n : this.nodes) {
+				i++;
+				System.out.println("Node Nº" + i + ":");
+				System.out.println("\t[" + n.getOperatingSystem() + "][" + n.getArch() + "][" + n.getnCores() + " cores][" + n.getIp() + "]");
+				System.out.println("\t" + n.getInsComputed() + " in/s computed");
+				System.out.println("\t" + n.getTimeComputing() + " seconds spent computing");
+				if(n.isComputing())System.out.println("\tIs computing");
+				else System.out.println("\tIs not computing");
+			}
+		}
+		else {
+			for(NodeInfo n : this.nodes) {
+				i++;
+				System.out.println(n.getName() + ":");
+				System.out.println("\t[" + n.getOperatingSystem() + "][" + n.getArch() + "][" + n.getnCores() + " cores][" + n.getIp() + "]");
+				System.out.println("\t" + n.getInsComputed() + " in/s computed");
+				System.out.println("\t" + n.getTimeComputing() + " seconds spent computing");
+				if(n.isComputing())System.out.println("\tIs computing");
+				else System.out.println("\tIs not computing");
+			}
 		}
 	}
 	

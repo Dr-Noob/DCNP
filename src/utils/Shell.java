@@ -77,14 +77,15 @@ public abstract class Shell {
 			}
 			//Wont exit if just enter was pressed
 			this.count++;
-			if(fullCommand[0].isEmpty())fullCommand[0] = searchCommand();
-		} while(fullCommand[0].isEmpty());
+			//If fullCommand contains anything, try to find it
+			if(this.fullCommand.length != 0 && fullCommand[0].isEmpty())fullCommand[0] = searchCommand();
+		} while(this.fullCommand.length == 0 || fullCommand[0].isEmpty());
 	}
 	
 	//Search for a command in the whole line
 	private String searchCommand() {
 		for(int i=0;i<fullCommand.length;i++)if(!fullCommand[i].isEmpty())return fullCommand[i];
 		//Full command searched, but nothing found, return empty command
-		return " ";
+		return "";
 	}
 }

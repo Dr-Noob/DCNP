@@ -6,19 +6,17 @@ public class Conductor {
 	
 	public static void main(String[] args) {
 		
-		if(args.length != 1){
-			System.out.println("ERROR: Conductor needs one argument(folder):");
-			return;
-		}
+		ConductorArgumentsParser parser = new ConductorArgumentsParser(args);
+		if(!parser.parseArgs())return;
 		
-		Folder f = new Folder(args[0]);
+		Folder f = new Folder(parser.getFolderPath());
 		if(!f.folderIsCorrect())return;
 		
 		ConductorProblem conductorProblem = new ConductorProblem(f.getProblemPath(), f.getProblemArgs());
 		if(!conductorProblem.problemIsCorrect())return;
 		conductorProblem.start();
 		
-		ConductorServer server = new ConductorServer(f);
+		ConductorServer server = new ConductorServer(f,parser);
 		if(server.shouldQuit()) {
 			conductorProblem.end();
 			return;

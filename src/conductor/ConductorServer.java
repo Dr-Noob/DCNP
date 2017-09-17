@@ -32,13 +32,15 @@ public class ConductorServer extends Thread {
 	private MessageProblemModule problem;
 	private ConductorShell shell;
 	private ConductorProblem conductorProblem;
+	private ConductorArgumentsParser parser;
 	private Semaphore start;
 	private Semaphore constructor;
 	private PriorityQueue<Integer> threadQueue; //Queue to handle threads array
 	private LinkedList<String> inputsNotComputed; //Inputs sent to nodes to be computed, but that we don't have their output yet
 	
-	public ConductorServer(Folder folder) {
+	public ConductorServer(Folder folder, ConductorArgumentsParser parser) {
 		this.shouldQuit = false;
+		this.parser = parser;
 		this.computingStarted = false;
 		this.solutionFound = false;
 		this.folder = folder;
@@ -86,7 +88,7 @@ public class ConductorServer extends Thread {
 		while(!shouldQuit) { 
 			try {
 				clientSocket = this.serverSocket.accept();
-				ConductorThread ct = new ConductorThread(clientSocket, nodesDatabase,this,problem,start,threadCounter);
+				ConductorThread ct = new ConductorThread(clientSocket, nodesDatabase,this,problem,parser.areNamesRequired(),parser.isDebugModeActivated(),start,threadCounter);
 				n = nextThread();
 				threads[n] = ct;
 				threads[n].start();

@@ -9,14 +9,20 @@ public class NodeArgumentsParser {
 	private int port;
 	private String ip;
 	private String folder;
+	private String name;
+	private boolean debugModeActivated;
 	
 	private boolean ipSet;
 	private boolean portSet;
 	private boolean folderSet;
+	private boolean debugModeSet;
+	private boolean nameSet;
 	
 	private final String HELP_MESSAGE = "To read help, run with '-help' option";
 	private final String ERROR_MESSAGE = "ERROR: Ip and folder must be specified";
 	private final Pattern IP_PATTERN = Pattern.compile("^(([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.){3}([01]?\\d\\d?|2[0-4]\\d|25[0-5])$");
+	private final String DEBUG_ACTIVATED_WORD = "verbose";
+	private final String DEBUG_DEACTIVATED_WORD = "quiet";
 	private final int DEFAULT_CONDUCTOR_PORT = 4450;
 	
 	public NodeArgumentsParser(String[] args) {
@@ -25,10 +31,12 @@ public class NodeArgumentsParser {
 		this.port = -1;
 		this.ip = new String();
 		this.folder = new String();
+		this.name = null;
 		
 		this.ipSet = false;
 		this.portSet = false;
 		this.folderSet = false;
+		this.debugModeActivated = false;
 	}
 	
 	public boolean parseArgs() {
@@ -67,7 +75,7 @@ public class NodeArgumentsParser {
 				if(i+1 < argLen) {
 					i++;
 					this.ip = this.args[i];
-					if(!IP_PATTERN.matcher(this.ip).matches() || this.ip.equals("127.0.0.1")){
+					if(!IP_PATTERN.matcher(this.ip).matches() || this.ip.startsWith("127")){
 						System.out.println("ERROR: " + this.ip + " is not a valid IP");
 						return false;
 					}
@@ -75,6 +83,48 @@ public class NodeArgumentsParser {
 				else return error();
 				
 				this.ipSet = true;
+				break;
+				
+			case "-name":
+				if(this.nameSet) {
+					System.out.println("ERROR: Name specified more than once");
+					return false;
+				}
+				
+				if(i+1 < argLen) {
+					i++;
+					this.name = this.args[i];
+					if(!this.name.matches("\\A\\p{ASCII}*\\z")) {
+						System.out.println("ERROR: Invalid name");
+						System.out.println("Name contains at least one non-ascii character");
+						return false;
+					}
+				}
+				else {
+					System.out.println("ERROR: Invalid name");
+					return false;
+				}
+				
+				this.nameSet = true;
+				break;
+			
+			case "-debug":
+				if(this.debugModeSet) {
+					System.out.println("ERROR: Debug mode set specified more than once");
+					return false;
+				}
+				if(i+1 < argLen) {
+					i++;
+					if(this.args[i].equals(DEBUG_ACTIVATED_WORD))this.debugModeActivated = true;
+					else if (this.args[i].equals(DEBUG_DEACTIVATED_WORD))this.debugModeActivated = false;
+					else {
+						System.out.println("ERROR: " + this.args[i] + " is not a valid mode for debug");
+						return false;
+					}
+				}
+				else return error();
+				
+				this.debugModeSet = true;
 				break;
 				
 			case "-folder":
@@ -122,7 +172,10 @@ public class NodeArgumentsParser {
 		System.out.println("\t REQUIRED. Specify the folder where jar file needed to solve the problem will be saved");
 		System.out.println("-debug X");
 		System.out.println("\t OPTIONAL. Change debug mode(messages that notifies outputs to be computed)"); 
-		System.out.println("Default is 'quiet', which will not display debug messages at all. 'verbose' mode will display every debug message");
+		System.out.println("\t Default is 'quiet', which will not display debug messages at all, whereas 'verbose' mode will display every debug message");
+		System.out.println("-name X");
+		System.out.println("\t OPTIONAL/REQUIRED. It depends on what conductor needs. If he needs all node's names, it's a required field. If not, it will have no effect");
+		System.out.println("\t Name will be displayed in conductor if its configured to do so");
 		System.out.println("-help");
 		System.out.println("\t Shows this help");
 	}
@@ -139,6 +192,14 @@ public class NodeArgumentsParser {
 	
 	public String getIp() {
 		return this.ip;
+	}
+	
+	public String getName() {
+		return this.name;
+	}
+	
+	public boolean isDebugModeActivated() {
+		return this.debugModeActivated;
 	}
 	
 	public int getPort() {

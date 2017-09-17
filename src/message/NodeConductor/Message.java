@@ -20,8 +20,9 @@ public abstract class Message {
 	public static final byte OP_NEW_IN = 4;
 	public static final byte OP_HAS_STARTED = 5;
 	public static final byte OP_START = 6;
-	public static final byte OP_BYE = 7;
-	public static final byte OP_NEW_OUT_BYE = 8;
+	public static final byte OP_NAME_ERROR = 7;
+	public static final byte OP_BYE = 8;
+	public static final byte OP_NEW_OUT_BYE = 9;
 	
 	private static final Byte[] valid_opcodes = {
 		OP_ADD_NODE,
@@ -73,18 +74,16 @@ public abstract class Message {
 		}
 		switch (OP) {
 		
-			//case OP_ADD_NODE:
-			//	return new MessageAddNode(OP,dis);
-			//case OP_PROBLEM_MODULE:
-			//	return new MessageProblemModule(OP,dis);
+			case OP_NAME_ERROR:
+				return new MessageNameError(OP,dis);
+			case OP_PROBLEM_MODULE:
+				return new MessageProblemModule(OP,dis);
 			case OP_NEW_OUT:
 				return new MessageNewOut(OP,dis);
 			case OP_NEW_OUT_BYE:
 				return new MessageNewOutBye(OP,dis);
 			case OP_NEW_IN:
 				return new MessageNewIn(OP,dis);
-			//case OP_HAS_STARTED:
-			//	return new MessageHasStarted(OP,dis);
 			case OP_START:
 				return new MessageStart(OP);
 			case OP_BYE:
