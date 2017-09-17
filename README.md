@@ -190,4 +190,4 @@ Comandos:
 ## Autores
 
 * **Pablo Martínez Sánchez** - *Todo, excepto el módulo de cálculo de numeros primos*
-* **Alguien** - *Módulo de cálculo de numeros primos*
+* **Gonzalo Caparrós Laiz** - *Módulo de cálculo de numeros primos*
